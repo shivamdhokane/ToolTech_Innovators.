@@ -19,7 +19,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.example.tooltechinnovators.ui.theme.ToolTechInnovatorsTheme
 
-// ------------------ Product Data Class ------------------
+
 data class Product(
     val id: Int,
     val name: String,
@@ -27,7 +27,7 @@ data class Product(
     val imageResId: Int
 )
 
-// ------------------ Sample Product List ------------------
+
 val sampleProducts = listOf(
     Product(1, "Power Drill", "₹2,499", R.drawable.powerdrill),
     Product(2, "Angle Grinder", "₹2,199", R.drawable.anglegrinder),
@@ -36,7 +36,7 @@ val sampleProducts = listOf(
     Product(5, "Power Planer", "₹4,999", R.drawable.powerplaner)
 )
 
-// ------------------ MainActivity ------------------
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-// ------------------ MainApp with Navigation ------------------
+
 @Composable
 fun MainApp() {
     val navController = rememberNavController()
@@ -61,7 +61,7 @@ fun MainApp() {
     }
 }
 
-// ------------------ Home Page ------------------
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavHostController) {
@@ -78,7 +78,7 @@ fun HomeScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Only this is clickable
+
             Button(
                 onClick = { navController.navigate("product") },
                 modifier = Modifier
@@ -96,7 +96,7 @@ fun HomeScreen(navController: NavHostController) {
                     .fillMaxWidth()
                     .height(60.dp),
                 shape = RoundedCornerShape(10.dp),
-                enabled = false // disables the button visually
+                enabled = false
             ) {
                 Text("Sign Up")
             }
@@ -108,7 +108,7 @@ fun HomeScreen(navController: NavHostController) {
                     .fillMaxWidth()
                     .height(60.dp),
                 shape = RoundedCornerShape(10.dp),
-                enabled = false // disables the button visually
+                enabled = false
             ) {
                 Text("Contact Us")
             }
@@ -116,7 +116,7 @@ fun HomeScreen(navController: NavHostController) {
     }
 }
 
-// ------------------ Product List Screen ------------------
+
 @Composable
 fun ProductListScreen() {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
@@ -126,7 +126,7 @@ fun ProductListScreen() {
     }
 }
 
-// ------------------ Product Card ------------------
+
 @Composable
 fun ProductCard(product: Product) {
     Card(
@@ -153,7 +153,7 @@ fun ProductCard(product: Product) {
                 Text(text = product.name, style = MaterialTheme.typography.titleMedium)
                 Text(text = product.price, color = MaterialTheme.colorScheme.primary)
                 Button(
-                    onClick = { /* Handle Buy */ },
+                    onClick = { },
                     modifier = Modifier.padding(top = 6.dp)
                 ) {
                     Text("Buy Now")
@@ -163,7 +163,7 @@ fun ProductCard(product: Product) {
     }
 }
 
-// ------------------ Sign Up Screen ------------------
+
 @Composable
 fun SignUpScreen() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -171,7 +171,6 @@ fun SignUpScreen() {
     }
 }
 
-// ------------------ Contact Screen ------------------
 @Composable
 fun ContactScreen() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
