@@ -1,6 +1,7 @@
 package com.example.tooltechinnovators
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -13,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -20,7 +22,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.example.tooltechinnovators.ui.theme.ToolTechInnovatorsTheme
 
-
+// ---------- Data ----------
 data class Product(
     val id: Int,
     val name: String,
@@ -36,6 +38,7 @@ val sampleProducts = listOf(
     Product(5, "Power Planer", "₹4,999", R.drawable.powerplaner)
 )
 
+// ---------- Main ----------
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,13 +53,27 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainApp() {
     val navController = rememberNavController()
+
+    var registeredEmail by remember { mutableStateOf("") }
+    var registeredPassword by remember { mutableStateOf("") }
+
     NavHost(navController = navController, startDestination = "home") {
         composable("home") { HomeScreen(navController) }
         composable("product") { ProductListScreen() }
         composable("signin") { SignInScreen(navController) }
+        composable("signup") {
+            SignUpScreen(navController) { email, password ->
+                registeredEmail = email
+                registeredPassword = password
+            }
+        }
+        composable("login") {
+            LoginScreen(navController, registeredEmail, registeredPassword)
+        }
         composable("contact") { ContactScreen() }
     }
 }
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -92,6 +109,7 @@ fun HomeScreen(navController: NavHostController) {
     }
 }
 
+// Product List
 @Composable
 fun ProductListScreen() {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
@@ -124,14 +142,9 @@ fun ProductCard(product: Product) {
     }
 }
 
-// sign in
+// ---------- Sign In Middle Screen ----------
 @Composable
 fun SignInScreen(navController: NavHostController) {
-    var username by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var mobile by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -139,45 +152,63 @@ fun SignInScreen(navController: NavHostController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Sign In", style = MaterialTheme.typography.headlineMedium)
+        Text("Welcome to Sign In", style = MaterialTheme.typography.headlineMedium)
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Button(
+            onClick = { navController.navigate("login") },
+            modifier = Modifier.fillMaxWidth().height(60.dp),
+            shape = RoundedCornerShape(10.dp)
+        ) {
+            Text("Log In")
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        OutlinedTextField(
-            value = username,
-            onValueChange = { username = it },
-            label = { Text("Username") },
-            modifier = Modifier.fillMaxWidth()
-        )
+        Button(
+            onClick = { navController.navigate("signup") },
+            modifier = Modifier.fillMaxWidth().height(60.dp),
+            shape = RoundedCornerShape(10.dp)
+        ) {
+            Text("Sign Up")
+        }
+    }
+}
 
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth()
-        )
 
-        OutlinedTextField(
-            value = mobile,
-            onValueChange = { mobile = it },
-            label = { Text("Mobile Number") },
-            modifier = Modifier.fillMaxWidth()
-        )
+@Composable
+fun LoginScreen(
+    navController: NavHostController,
+    registeredEmail: String,
+    registeredPassword: String
+) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth()
-        )
+    Column(
+        modifier = Modifier.fillMaxSize().padding(24.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Log In", style = MaterialTheme.typography.headlineMedium)
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(value = email, onValueChange = { email = it }, label = { Text("Email") }, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(value = password, onValueChange = { password = it }, label = { Text("Password") }, visualTransformation = PasswordVisualTransformation(), modifier = Modifier.fillMaxWidth())
 
         Spacer(modifier = Modifier.height(20.dp))
 
         Button(
             onClick = {
-                // TODO: Add validation later
-                navController.navigate("home")
+                if (email == registeredEmail && password == registeredPassword) {
+                    Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
+                    navController.navigate("home")
+                } else {
+                    Toast.makeText(context, "Invalid Credentials", Toast.LENGTH_SHORT).show()
+                }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -187,6 +218,52 @@ fun SignInScreen(navController: NavHostController) {
 }
 
 
+@Composable
+fun SignUpScreen(
+    navController: NavHostController,
+    onRegister: (String, String) -> Unit
+) {
+    var username by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var mobile by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    val context = LocalContext.current
+
+    Column(
+        modifier = Modifier.fillMaxSize().padding(24.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Sign Up", style = MaterialTheme.typography.headlineMedium)
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(value = username, onValueChange = { username = it }, label = { Text("Username") }, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(value = email, onValueChange = { email = it }, label = { Text("Email") }, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(value = mobile, onValueChange = { mobile = it }, label = { Text("Mobile Number") }, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(value = password, onValueChange = { password = it }, label = { Text("Password") }, visualTransformation = PasswordVisualTransformation(), modifier = Modifier.fillMaxWidth())
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Button(
+            onClick = {
+                if (email.isNotEmpty() && password.isNotEmpty()) {
+                    onRegister(email, password)   // save values
+                    Toast.makeText(context, "Sign Up Successful", Toast.LENGTH_SHORT).show()
+                    navController.navigate("login")
+                } else {
+                    Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Register")
+        }
+    }
+}
+
+
+// ---------- Contact ----------
 @Composable
 fun ContactScreen() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

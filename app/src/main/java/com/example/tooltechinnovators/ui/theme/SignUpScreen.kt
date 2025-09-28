@@ -1,5 +1,4 @@
 package com.example.tooltechinnovators.ui.theme
-
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -9,9 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.tooltechinnovators.LoginScreen
 import com.example.tooltechinnovators.R
-
 class SignUpScreen : AppCompatActivity() {
-
     lateinit var getName: EditText
     lateinit var getEmail: EditText
     lateinit var getPhone: EditText
@@ -33,7 +30,6 @@ class SignUpScreen : AppCompatActivity() {
         getPassword = findViewById(R.id.userPassword)
         signUpClick = findViewById(R.id.signUpAction)
 
-        // Store the data in Preference
         signUpClick.setOnClickListener {
             editor.putString("username",getName.text.toString())
             editor.putString("email",getEmail.text.toString())
@@ -41,7 +37,6 @@ class SignUpScreen : AppCompatActivity() {
             editor.putString("password",getPassword.text.toString())
             editor.apply()
 
-            // Context + Message + Duration + show()
             Toast.makeText(this,"Data Saved", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, LoginScreen::class.java)
             startActivity(intent)

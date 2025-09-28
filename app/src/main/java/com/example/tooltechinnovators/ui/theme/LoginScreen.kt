@@ -1,14 +1,11 @@
 package com.example.tooltechinnovators
-
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-
 class LoginScreen : AppCompatActivity() {
-
     lateinit var getUsername: EditText
     lateinit var getPassword: EditText
     lateinit var loginAction: Button
@@ -17,7 +14,8 @@ class LoginScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_login)
 
-        val myPreference = applicationContext.getSharedPreferences("myPref", MODE_PRIVATE)
+        val myPreference = applicationContext.getSharedPreferences("myPref",
+            MODE_PRIVATE)
 
         getUsername = findViewById(R.id.username)
         getPassword = findViewById(R.id.password)
