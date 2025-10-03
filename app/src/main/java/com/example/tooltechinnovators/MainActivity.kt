@@ -272,7 +272,7 @@ fun ContactScreen() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.Start
     ) {
-        Text("📞 Contact Us", style = MaterialTheme.typography.headlineMedium)
+        Text("📞 Contact Us ", style = MaterialTheme.typography.headlineMedium)
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -283,7 +283,7 @@ fun ContactScreen() {
         Spacer(modifier = Modifier.height(30.dp))
 
         Button(
-            onClick = {  },
+            onClick = {   },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Send Us an Email")
