@@ -12,7 +12,7 @@ class HomeScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_home_screen)
 
-        // Match the "main" id from XML
+        
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(

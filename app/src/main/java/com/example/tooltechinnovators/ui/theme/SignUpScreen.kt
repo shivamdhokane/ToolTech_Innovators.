@@ -40,7 +40,6 @@ class SignUpScreen : AppCompatActivity() {
             Toast.makeText(this,"Data Saved", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, LoginScreen::class.java)
             startActivity(intent)
-
         }
     }
 

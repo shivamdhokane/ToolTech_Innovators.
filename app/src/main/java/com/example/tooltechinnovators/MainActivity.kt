@@ -263,10 +263,30 @@ fun SignUpScreen(
 }
 
 
-// ---------- Contact ----------
 @Composable
 fun ContactScreen() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("Contact Us")
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.Start
+    ) {
+        Text("📞 Contact Us", style = MaterialTheme.typography.headlineMedium)
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Text("Owner : Sachin Desai", style = MaterialTheme.typography.bodyLarge)
+        Text("Phone: +919822545478", style = MaterialTheme.typography.bodyLarge)
+        Text("Address: Desai Complex , Pimplas Road , Rahata ,Ahmednagar 423107, Maharashtra, India", style = MaterialTheme.typography.bodyLarge)
+
+        Spacer(modifier = Modifier.height(30.dp))
+
+        Button(
+            onClick = {  },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Send Us an Email")
+        }
     }
 }
