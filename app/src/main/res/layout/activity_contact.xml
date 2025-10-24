@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#E3F2FD"
+    android:padding="20dp">
+
+    <!-- Header -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Contact Us"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:background="#1976D2"
+        android:gravity="center_vertical"
+        android:padding="14dp"
+        android:layout_marginBottom="20dp"
+        android:elevation="4dp" />
+
+    <!-- Contact Card -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/contact_card_bg"
+        android:padding="16dp"
+        android:elevation="6dp"
+        android:layout_marginBottom="30dp">
+
+        <!-- Owner -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/person"
+                android:layout_marginEnd="12dp"
+                app:tint="#1976D2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Owner: Sachin Desai"
+                android:textSize="16sp"
+                android:textColor="#212121" />
+        </LinearLayout>
+
+        <!-- Phone -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_contact"
+                android:layout_marginEnd="12dp"
+                app:tint="#388E3C" />
+
+            <TextView
+                android:id="@+id/contactPhone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phone: +91 98225 45478"
+                android:textSize="16sp"
+                android:textColor="#212121" />
+        </LinearLayout>
+
+        <!-- Email -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/email"
+                android:layout_marginEnd="12dp"
+                app:tint="#F57C00" />
+
+            <TextView
+                android:id="@+id/contactEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Email: support@samarthelectricals.com"
+                android:textSize="16sp"
+                android:textColor="#212121" />
+        </LinearLayout>
+
+        <!-- Address -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="top">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/location"
+                android:layout_marginEnd="12dp"
+                app:tint="#E53935" />
+
+            <TextView
+                android:id="@+id/contactAddress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Desai Complex, Pimplas Road, Rahata, Ahmednagar 423107, Maharashtra, India"
+                android:textSize="16sp"
+                android:textColor="#212121" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Send Message Button -->
+    <Button
+        android:id="@+id/emailBtn"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Send Message"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:drawableLeft="@drawable/email"
+        android:drawablePadding="10dp"
+        android:backgroundTint="#1976D2"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:gravity="center_vertical|center_horizontal" />
+</LinearLayout>

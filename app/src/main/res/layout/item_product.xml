@@ -1,0 +1,46 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:background="#F9FAFB"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/productImage"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:scaleType="centerCrop"
+        android:layout_marginEnd="12dp" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/productName"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+
+        <TextView
+            android:id="@+id/productPrice"
+            android:textColor="#3F51B5"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+
+        <!-- 👇 Add this button -->
+        <Button
+            android:id="@+id/buyNowBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Buy Now"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#4CAF50" />
+    </LinearLayout>
+</LinearLayout>

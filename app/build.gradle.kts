@@ -8,6 +8,9 @@ plugins {
 android {
     namespace = "com.example.tooltechinnovators"
     compileSdk = 36
+    buildFeatures {
+        viewBinding = true
+    }
 
     defaultConfig {
         applicationId = "com.example.tooltechinnovators"
@@ -55,7 +58,9 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation("androidx.cardview:cardview:1.0.0")
     implementation(libs.androidx.activity)
+    implementation("com.google.android.material:material:1.12.0")
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.compose.runtime.saveable)
     implementation(libs.androidx.compose.foundation)

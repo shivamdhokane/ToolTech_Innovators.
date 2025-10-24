@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pay Securely"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Product Name -->
+        <TextView
+            android:id="@+id/paymentProductName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Power Drill"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#000000" />
+
+        <!-- Product Price -->
+        <TextView
+            android:id="@+id/paymentProductPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="₹2,499"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:textColor="#2196F3"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Subtitle -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose a payment method"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Payment Option Cards -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Google Pay -->
+            <LinearLayout
+                android:id="@+id/gpayOption"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/payment_card_bg"
+                android:padding="12dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/gpay" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Google Pay"
+                    android:textSize="17sp"
+                    android:textColor="#000000"
+                    android:layout_marginStart="16dp" />
+            </LinearLayout>
+
+            <!-- PhonePe -->
+            <LinearLayout
+                android:id="@+id/phonepeOption"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/payment_card_bg"
+                android:padding="12dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/phonepe" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PhonePe"
+                    android:textSize="17sp"
+                    android:textColor="#000000"
+                    android:layout_marginStart="16dp" />
+            </LinearLayout>
+
+            <!-- Paytm -->
+            <LinearLayout
+                android:id="@+id/paytmOption"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/payment_card_bg"
+                android:padding="12dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/paytm" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Paytm"
+                    android:textSize="17sp"
+                    android:textColor="#000000"
+                    android:layout_marginStart="16dp" />
+            </LinearLayout>
+
+            <!-- UPI -->
+            <LinearLayout
+                android:id="@+id/upiOption"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/payment_card_bg"
+                android:padding="12dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/upi" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="UPI"
+                    android:textSize="17sp"
+                    android:textColor="#000000"
+                    android:layout_marginStart="16dp" />
+            </LinearLayout>
+
+            <!-- Credit/Debit Card -->
+            <LinearLayout
+                android:id="@+id/cardOption"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/payment_card_bg"
+                android:padding="12dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="24dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/card" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Credit / Debit Card"
+                    android:textSize="17sp"
+                    android:textColor="#000000"
+                    android:layout_marginStart="16dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Pay Button -->
+        <Button
+            android:id="@+id/payButton"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="Pay Now"
+            android:textAllCaps="false"
+            android:textSize="17sp"
+            android:backgroundTint="#3F51B5"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Footer -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Secured by Samarth Electricals 🔒"
+            android:textSize="13sp"
+            android:textColor="#6B6B6B"
+            android:layout_marginTop="8dp" />
+    </LinearLayout>
+</ScrollView>
