@@ -18,10 +18,10 @@ class ContactActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Set contact details
-        binding.contactPhone.text = "Phone: +91 98225 45478"
+        binding.contactPhone.text = "Phone: +91 98225 454787"
         binding.contactAddress.text =
             "Desai Complex, Pimplas Road, Rahata, Ahmednagar 423107, Maharashtra, India"
-        binding.contactEmail.text = "support@samarthelectricals.com"
+        binding.contactEmail.text = "samarth_elect@rediffmail.com"
 
         // Handle Email Button
         binding.emailBtn.setOnClickListener {
@@ -30,7 +30,7 @@ class ContactActivity : AppCompatActivity() {
 
         // Optional: Click phone to open dialer
         binding.contactPhone.setOnClickListener {
-            val phoneNumber = "+919822545478"
+            val phoneNumber = "+9198225454787"
             val intent = Intent(Intent.ACTION_DIAL).apply {
                 data = Uri.parse("tel:$phoneNumber")
             }
@@ -45,7 +45,7 @@ class ContactActivity : AppCompatActivity() {
 
     private fun sendEmail() {
         val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
-            data = Uri.parse("mailto:support@samarthelectricals.com")
+            data = Uri.parse("mailto:samarth_elect@rediffmail.com")
             putExtra(Intent.EXTRA_SUBJECT, "Inquiry from ToolTech App")
         }
 
