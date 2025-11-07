@@ -26,5 +26,13 @@ class DashboardActivity : AppCompatActivity() {
         binding.contactUsBtn.setOnClickListener {
             startActivity(Intent(this, ContactActivity::class.java))
         }
+
+        binding.cartBtn.setOnClickListener {
+            startActivity(Intent(this, CartActivity::class.java))
+        }
+
+        binding.myOrdersBtn.setOnClickListener {
+            startActivity(Intent(this, MyOrdersActivity::class.java))
+        }
     }
 }

@@ -1,0 +1,46 @@
+package com.example.tooltechinnovators
+
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.example.tooltechinnovators.databinding.ItemOrderBinding
+
+class OrdersAdapter(
+    private val orders: List<Order>
+) : RecyclerView.Adapter<OrdersAdapter.OrderViewHolder>() {
+
+    inner class OrderViewHolder(val binding: ItemOrderBinding) : RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderViewHolder {
+        val binding = ItemOrderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return OrderViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: OrderViewHolder, position: Int) {
+        val order = orders[position]
+        holder.binding.orderIdTv.text = "Order #${order.orderId.take(8)}"
+        holder.binding.orderDateTv.text = "Date: ${order.orderDate}"
+        holder.binding.orderTotalTv.text = order.totalAmount
+        holder.binding.orderItemsTv.text = "Items: ${order.items.size}"
+        
+        // Set status with color
+        holder.binding.orderStatusTv.text = order.status
+        when (order.status.lowercase()) {
+            "pending" -> {
+                holder.binding.orderStatusTv.setTextColor(0xFFFF6B00.toInt())
+                holder.binding.orderStatusTv.setBackgroundColor(0xFFFFE5D4.toInt())
+            }
+            "completed" -> {
+                holder.binding.orderStatusTv.setTextColor(0xFF16A34A.toInt())
+                holder.binding.orderStatusTv.setBackgroundColor(0xFFD1FAE5.toInt())
+            }
+            else -> {
+                holder.binding.orderStatusTv.setTextColor(0xFFDC2626.toInt())
+                holder.binding.orderStatusTv.setBackgroundColor(0xFFFEE2E2.toInt())
+            }
+        }
+    }
+
+    override fun getItemCount(): Int = orders.size
+}
+

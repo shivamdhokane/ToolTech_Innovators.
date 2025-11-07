@@ -65,6 +65,8 @@ dependencies {
     implementation(libs.androidx.compose.runtime.saveable)
     implementation(libs.androidx.compose.foundation)
     implementation(libs.firebase.auth)
+    implementation("com.google.firebase:firebase-database")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation(libs.androidx.ui)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

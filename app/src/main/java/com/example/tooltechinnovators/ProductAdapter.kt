@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tooltechinnovators.databinding.ItemProductBinding
 
 class ProductAdapter(
-    private val products: List<Product>,
+    private val products: MutableList<Product>,
     private val onClick: (Product) -> Unit
 ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 

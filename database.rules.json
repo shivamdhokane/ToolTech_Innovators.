@@ -1,0 +1,21 @@
+{
+  "rules": {
+    "carts": {
+      "$userId": {
+        ".read": "$userId === auth.uid",
+        ".write": "$userId === auth.uid"
+      }
+    },
+    "orders": {
+      "$userId": {
+        ".read": "$userId === auth.uid",
+        ".write": "$userId === auth.uid"
+      }
+    }
+  }
+}
+
+
+
+
+

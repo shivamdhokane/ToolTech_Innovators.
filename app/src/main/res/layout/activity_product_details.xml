@@ -130,16 +130,36 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Proceed to Buy Button -->
-        <Button
-            android:id="@+id/buyNowBtn"
+        <!-- Action Buttons -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:text="Proceed to Buy"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:backgroundTint="#2563EB"
-            android:layout_marginBottom="40dp" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="40dp">
+
+            <Button
+                android:id="@+id/addToCartBtn"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_weight="1"
+                android:text="Add to Cart"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:backgroundTint="#DC2626"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/buyNowBtn"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_weight="1"
+                android:text="Buy Now"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:backgroundTint="#2563EB"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

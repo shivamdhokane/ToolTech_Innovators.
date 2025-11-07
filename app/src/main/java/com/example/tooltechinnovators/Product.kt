@@ -8,5 +8,6 @@ data class Product(
     val description: String,
     val brandModel: String,
     val powerWatts: String,
-    val weightKg: String
+    val weightKg: String,
+    val category: String = "General"
 )
