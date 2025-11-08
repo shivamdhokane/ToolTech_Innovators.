@@ -15,6 +15,7 @@ class MyOrdersActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var ordersAdapter: OrdersAdapter
     private val orders = mutableListOf<Order>()
+    private var ordersListener: ValueEventListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,40 +49,16 @@ class MyOrdersActivity : AppCompatActivity() {
         
         val ordersRef = database.child("orders").child(userId)
         
-        // Add debug logging
-        android.util.Log.d("MyOrdersActivity", "Loading orders for userId: $userId")
-        android.util.Log.d("MyOrdersActivity", "Database path: orders/$userId")
-        android.util.Log.d("MyOrdersActivity", "Current user: ${auth.currentUser?.email}")
-        
-        // First, let's check if the path exists at all
-        database.child("orders").addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                android.util.Log.d("MyOrdersActivity", "Root orders node exists: ${snapshot.exists()}")
-                android.util.Log.d("MyOrdersActivity", "Root orders has children: ${snapshot.hasChildren()}")
-                if (snapshot.exists()) {
-                    android.util.Log.d("MyOrdersActivity", "All user IDs in orders: ${snapshot.children.map { it.key }}")
-                }
-            }
-            override fun onCancelled(error: DatabaseError) {
-                android.util.Log.e("MyOrdersActivity", "Error checking root orders: ${error.message}")
-            }
-        })
+        android.util.Log.d("MyOrdersActivity", "Setting up real-time listener for orders. UserId: $userId")
 
-        ordersRef.addValueEventListener(object : ValueEventListener {
+        val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 orders.clear()
                 
-                android.util.Log.d("MyOrdersActivity", "Snapshot exists: ${snapshot.exists()}")
-                android.util.Log.d("MyOrdersActivity", "Snapshot has children: ${snapshot.hasChildren()}")
+                android.util.Log.d("MyOrdersActivity", "Real-time update received. Snapshot exists: ${snapshot.exists()}")
                 
-                if (!snapshot.exists()) {
-                    android.util.Log.d("MyOrdersActivity", "No orders found in database")
-                    updateEmptyState()
-                    return
-                }
-                
-                if (!snapshot.hasChildren()) {
-                    android.util.Log.d("MyOrdersActivity", "Snapshot exists but has no children")
+                if (!snapshot.exists() || !snapshot.hasChildren()) {
+                    android.util.Log.d("MyOrdersActivity", "No orders found")
                     updateEmptyState()
                     return
                 }
@@ -90,20 +67,12 @@ class MyOrdersActivity : AppCompatActivity() {
                 
                 for (orderSnapshot in snapshot.children) {
                     try {
-                        android.util.Log.d("MyOrdersActivity", "Processing order: ${orderSnapshot.key}")
-                        android.util.Log.d("MyOrdersActivity", "Order value: ${orderSnapshot.value}")
-                        
                         // Get order data as a map
                         val orderData = orderSnapshot.value as? Map<*, *>
                         if (orderData != null) {
-                            android.util.Log.d("MyOrdersActivity", "Order data keys: ${orderData.keys}")
-                            
                             // Extract items from the map - Firebase can return items as List or Map
                             val itemsList = mutableListOf<CartItem>()
                             val itemsData = orderData["items"]
-                            
-                            android.util.Log.d("MyOrdersActivity", "Items data type: ${itemsData?.javaClass?.simpleName}")
-                            android.util.Log.d("MyOrdersActivity", "Items data: $itemsData")
                             
                             when (itemsData) {
                                 is List<*> -> {
@@ -140,57 +109,54 @@ class MyOrdersActivity : AppCompatActivity() {
                                         }
                                     }
                                 }
-                                else -> {
-                                    android.util.Log.w("MyOrdersActivity", "Items data is neither List nor Map: ${itemsData?.javaClass}")
-                                }
                             }
                             
-                            // Create Order object
+                            // Create Order object with current status
+                            val currentStatus = orderData["status"] as? String ?: "Pending"
                             val order = Order(
                                 orderId = orderSnapshot.key ?: "",
                                 userId = orderData["userId"] as? String ?: "",
                                 items = itemsList,
                                 totalAmount = orderData["totalAmount"] as? String ?: "",
                                 orderDate = orderData["orderDate"] as? String ?: "",
-                                status = orderData["status"] as? String ?: "Pending"
+                                status = currentStatus
                             )
                             orders.add(order)
-                            android.util.Log.d("MyOrdersActivity", "Added order: ${order.orderId} with ${order.items.size} items")
+                            android.util.Log.d("MyOrdersActivity", "Order ${order.orderId} - Status: ${order.status}")
                         } else {
                             // Fallback: try to get as Order object (for backward compatibility)
                             val order = orderSnapshot.getValue(Order::class.java)
                             order?.let {
                                 val orderWithId = it.copy(orderId = orderSnapshot.key ?: "")
                                 orders.add(orderWithId)
-                                android.util.Log.d("MyOrdersActivity", "Added order (fallback): ${orderWithId.orderId}")
                             }
                         }
                     } catch (e: Exception) {
-                        // Log error but continue processing other orders
                         android.util.Log.e("MyOrdersActivity", "Error parsing order: ${e.message}", e)
-                        e.printStackTrace()
                     }
                 }
-                
-                android.util.Log.d("MyOrdersActivity", "Total orders loaded: ${orders.size}")
                 
                 // Sort orders by date (newest first)
                 orders.sortByDescending { it.orderDate }
                 ordersAdapter.notifyDataSetChanged()
                 updateEmptyState()
+                
+                android.util.Log.d("MyOrdersActivity", "Orders list updated. Total: ${orders.size}")
             }
 
             override fun onCancelled(error: DatabaseError) {
                 android.util.Log.e("MyOrdersActivity", "Error loading orders: ${error.message}")
-                android.util.Log.e("MyOrdersActivity", "Error code: ${error.code}")
                 val errorMsg = if (error.message.contains("Permission denied")) {
-                    "Permission denied. Please check Firebase Database rules. See FIREBASE_SETUP.md"
+                    "Permission denied. Please check Firebase Database rules."
                 } else {
                     "Error loading orders: ${error.message}"
                 }
                 Toast.makeText(this@MyOrdersActivity, errorMsg, Toast.LENGTH_LONG).show()
             }
-        })
+        }
+        
+        ordersListener = listener
+        ordersRef.addValueEventListener(listener)
     }
 
     private fun updateEmptyState() {
@@ -200,6 +166,18 @@ class MyOrdersActivity : AppCompatActivity() {
         } else {
             binding.emptyOrdersTv.visibility = View.GONE
             binding.ordersRecyclerView.visibility = View.VISIBLE
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Remove listener to prevent memory leaks
+        ordersListener?.let {
+            val userId = auth.currentUser?.uid
+            if (userId != null) {
+                database.child("orders").child(userId).removeEventListener(it)
+                android.util.Log.d("MyOrdersActivity", "Removed orders listener")
+            }
         }
     }
 }

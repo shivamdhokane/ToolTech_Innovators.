@@ -11,6 +11,22 @@
         ".read": "$userId === auth.uid",
         ".write": "$userId === auth.uid"
       }
+    },
+    "allOrders": {
+      ".read": true,
+      ".write": true
+    },
+    "savedAddresses": {
+      "$userId": {
+        ".read": "$userId === auth.uid",
+        ".write": "$userId === auth.uid"
+      }
+    },
+    "userDetails": {
+      "$userId": {
+        ".read": "$userId === auth.uid",
+        ".write": "$userId === auth.uid"
+      }
     }
   }
 }

@@ -27,6 +27,46 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <!-- Saved Addresses Section -->
+            <TextView
+                android:id="@+id/savedAddressesLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Saved Addresses"
+                android:textStyle="bold"
+                android:textColor="#1E3A8A"
+                android:textSize="17sp"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/savedAddressesRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/noSavedAddressesTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No saved addresses yet"
+                android:textSize="14sp"
+                android:textColor="#6B7280"
+                android:visibility="gone"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/addNewAddressLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add New Address"
+                android:textStyle="bold"
+                android:textColor="#1E3A8A"
+                android:textSize="17sp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp" />
+
             <!-- Full Name -->
             <EditText
                 android:id="@+id/fullName"
@@ -60,6 +100,16 @@
                 android:layout_marginTop="12dp"
                 android:padding="14dp"
                 android:background="@drawable/edittext_bg" />
+
+            <!-- Save Address Checkbox -->
+            <CheckBox
+                android:id="@+id/saveAddressCheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save this address for future orders"
+                android:textSize="14sp"
+                android:layout_marginTop="8dp"
+                android:checked="true" />
 
             <!-- Payment Options Title -->
             <TextView

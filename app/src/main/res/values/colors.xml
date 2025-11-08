@@ -7,4 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+            <color name="status_pending_text">#FF6B00</color>
+            <color name="status_pending_background">#FFE5D4</color>
+            <color name="status_accepted_text">#2563EB</color>
+            <color name="status_accepted_background">#DBEAFE</color>
 </resources>

@@ -30,13 +30,29 @@ class OrdersAdapter(
                 holder.binding.orderStatusTv.setTextColor(0xFFFF6B00.toInt())
                 holder.binding.orderStatusTv.setBackgroundColor(0xFFFFE5D4.toInt())
             }
+            "accepted" -> {
+                holder.binding.orderStatusTv.setTextColor(0xFF2563EB.toInt())
+                holder.binding.orderStatusTv.setBackgroundColor(0xFFDBEAFE.toInt())
+            }
+            "rejected" -> {
+                holder.binding.orderStatusTv.setTextColor(0xFFDC2626.toInt())
+                holder.binding.orderStatusTv.setBackgroundColor(0xFFFEE2E2.toInt())
+            }
+            "delivering" -> {
+                holder.binding.orderStatusTv.setTextColor(0xFF7C3AED.toInt())
+                holder.binding.orderStatusTv.setBackgroundColor(0xFFEDE9FE.toInt())
+            }
+            "delivered" -> {
+                holder.binding.orderStatusTv.setTextColor(0xFF16A34A.toInt())
+                holder.binding.orderStatusTv.setBackgroundColor(0xFFD1FAE5.toInt())
+            }
             "completed" -> {
                 holder.binding.orderStatusTv.setTextColor(0xFF16A34A.toInt())
                 holder.binding.orderStatusTv.setBackgroundColor(0xFFD1FAE5.toInt())
             }
             else -> {
-                holder.binding.orderStatusTv.setTextColor(0xFFDC2626.toInt())
-                holder.binding.orderStatusTv.setBackgroundColor(0xFFFEE2E2.toInt())
+                holder.binding.orderStatusTv.setTextColor(0xFF6B7280.toInt())
+                holder.binding.orderStatusTv.setBackgroundColor(0xFFF3F4F6.toInt())
             }
         }
     }

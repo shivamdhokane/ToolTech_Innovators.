@@ -17,6 +17,8 @@ class PaymentActivity : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private var amount = "100" // Example — you can pass this dynamically
     
+    private var isFromCart = false
+    private var cartTotalAmount = 0.0
     private var productId: Int = -1
     private var productName: String = ""
     private var productPrice: String = ""
@@ -33,6 +35,9 @@ class PaymentActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance().reference
 
+        isFromCart = intent.getBooleanExtra("isFromCart", false)
+        cartTotalAmount = intent.getDoubleExtra("totalAmount", 0.0)
+        
         productId = intent.getIntExtra("productId", -1)
         productName = intent.getStringExtra("productName") ?: "Product"
         productPrice = intent.getStringExtra("productPrice") ?: "₹100"
@@ -41,10 +46,15 @@ class PaymentActivity : AppCompatActivity() {
         customerMobile = intent.getStringExtra("customerMobile") ?: ""
         customerAddress = intent.getStringExtra("customerAddress") ?: ""
         
-        amount = productPrice.replace("₹", "").replace(",", "")
-
-        binding.paymentProductName.text = productName
-        binding.paymentProductPrice.text = productPrice
+        if (isFromCart) {
+            amount = String.format("%.2f", cartTotalAmount)
+            binding.paymentProductName.text = "Cart Items"
+            binding.paymentProductPrice.text = "₹${String.format("%.2f", cartTotalAmount)}"
+        } else {
+            amount = productPrice.replace("₹", "").replace(",", "")
+            binding.paymentProductName.text = productName
+            binding.paymentProductPrice.text = productPrice
+        }
 
         // Google Pay
         binding.gpayOption.setOnClickListener {
@@ -63,14 +73,27 @@ class PaymentActivity : AppCompatActivity() {
 
         // Generic UPI
         binding.upiOption.setOnClickListener {
-            payUsingUpi(null, "UPI App")
+            payUsingUpi(null, "UPI")
+        }
+        
+        // Credit/Debit Card (optional - can show a message or implement card payment)
+        binding.cardOption.setOnClickListener {
+            Toast.makeText(this, "Card payment coming soon!", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun payUsingUpi(packageName: String?, appName: String) {
-        val uri = Uri.parse(
-            "upi://pay?pa=yourmerchant@upi&pn=ToolTech%20Innovators&am=$amount&cu=INR&tn=Payment%20for%20$amount"
-        )
+        // Format amount for UPI (remove any formatting, use plain number)
+        val cleanAmount = amount.replace(",", "").trim()
+        
+        // Create UPI payment URI
+        // Note: Replace 'yourmerchant@upi' with your actual UPI ID
+        val upiId = "yourmerchant@upi" // Replace with actual merchant UPI ID
+        val merchantName = "ToolTech%20Innovators"
+        val transactionNote = "Payment%20for%20order"
+        
+        val uriString = "upi://pay?pa=$upiId&pn=$merchantName&am=$cleanAmount&cu=INR&tn=$transactionNote"
+        val uri = Uri.parse(uriString)
 
         val intent = Intent(Intent.ACTION_VIEW, uri)
         if (packageName != null) {
@@ -79,21 +102,34 @@ class PaymentActivity : AppCompatActivity() {
 
         try {
             startActivity(intent)
-            // Save order to Firebase after opening payment app
+            // Save order to Firebase with specific payment method name
             // Note: In a real app, you'd verify payment completion via a callback/webhook
-            saveOrderToFirebase("Online Payment")
+            saveOrderToFirebase(appName)
         } catch (e: ActivityNotFoundException) {
-            Toast.makeText(this, "$appName not installed", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "$appName is not installed", Toast.LENGTH_SHORT).show()
             if (packageName != null) {
                 // Open Play Store if app missing
                 try {
-                    val playIntent = Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse("market://details?id=$packageName")
-                    )
+                    val playStoreUri = Uri.parse("market://details?id=$packageName")
+                    val playIntent = Intent(Intent.ACTION_VIEW, playStoreUri)
                     startActivity(playIntent)
                 } catch (ex: Exception) {
-                    Toast.makeText(this, "Unable to open Play Store", Toast.LENGTH_SHORT).show()
+                    // If Play Store app is not available, try browser
+                    try {
+                        val browserUri = Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+                        val browserIntent = Intent(Intent.ACTION_VIEW, browserUri)
+                        startActivity(browserIntent)
+                    } catch (ex2: Exception) {
+                        Toast.makeText(this, "Unable to open Play Store", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } else {
+                // For generic UPI, try opening any UPI app
+                try {
+                    val genericUpiIntent = Intent(Intent.ACTION_VIEW, uri)
+                    startActivity(genericUpiIntent)
+                } catch (ex: Exception) {
+                    Toast.makeText(this, "No UPI app found. Please install a UPI payment app.", Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -105,6 +141,16 @@ class PaymentActivity : AppCompatActivity() {
             Toast.makeText(this, "Please login to place order", Toast.LENGTH_SHORT).show()
             return
         }
+
+        if (isFromCart) {
+            saveCartOrderToFirebase(paymentMethod)
+        } else {
+            saveSingleProductOrderToFirebase(paymentMethod)
+        }
+    }
+
+    private fun saveSingleProductOrderToFirebase(paymentMethod: String) {
+        val userId = auth.currentUser?.uid ?: return
 
         val orderId = database.child("orders").push().key
         if (orderId == null) {
@@ -150,16 +196,123 @@ class PaymentActivity : AppCompatActivity() {
             "paymentMethod" to paymentMethod
         )
 
-        // Save order to Firebase
-        val orderPath = database.child("orders").child(userId).child(orderId)
-        orderPath.setValue(orderData)
+        // Save order to Firebase in both user-specific location and allOrders for admin
+        val userOrderPath = database.child("orders").child(userId).child(orderId)
+        val allOrdersPath = database.child("allOrders").child(orderId)
+        
+        // Save to user-specific location
+        userOrderPath.setValue(orderData)
             .addOnSuccessListener {
-                android.util.Log.d("PaymentActivity", "Order saved successfully!")
-                Toast.makeText(this, "Order placed! Payment initiated.", Toast.LENGTH_LONG).show()
+                // Also save to allOrders for admin access
+                allOrdersPath.setValue(orderData)
+                    .addOnSuccessListener {
+                        android.util.Log.d("PaymentActivity", "Order saved successfully!")
+                        Toast.makeText(this, "Order placed! Payment initiated.", Toast.LENGTH_LONG).show()
+                    }
+                    .addOnFailureListener { e ->
+                        android.util.Log.e("PaymentActivity", "Error saving to allOrders: ${e.message}")
+                        // Still show success since user order was saved
+                        Toast.makeText(this, "Order placed! Payment initiated.", Toast.LENGTH_LONG).show()
+                    }
             }
             .addOnFailureListener { e ->
                 android.util.Log.e("PaymentActivity", "Error saving order: ${e.message}")
                 Toast.makeText(this, "Error placing order: ${e.message}", Toast.LENGTH_LONG).show()
             }
+    }
+
+    private fun saveCartOrderToFirebase(paymentMethod: String) {
+        val userId = auth.currentUser?.uid ?: return
+
+        // Load cart items from Firebase
+        val cartRef = database.child("carts").child(userId)
+        cartRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (!snapshot.exists() || !snapshot.hasChildren()) {
+                    Toast.makeText(this@PaymentActivity, "Your cart is empty", Toast.LENGTH_SHORT).show()
+                    return
+                }
+
+                val cartItems = mutableListOf<CartItem>()
+                for (itemSnapshot in snapshot.children) {
+                    val cartItem = itemSnapshot.getValue(CartItem::class.java)
+                    cartItem?.let {
+                        val itemWithId = it.copy(cartItemId = itemSnapshot.key ?: "")
+                        cartItems.add(itemWithId)
+                    }
+                }
+
+                if (cartItems.isEmpty()) {
+                    Toast.makeText(this@PaymentActivity, "Your cart is empty", Toast.LENGTH_SHORT).show()
+                    return
+                }
+
+                val orderId = database.child("orders").push().key
+                if (orderId == null) {
+                    Toast.makeText(this@PaymentActivity, "Error creating order. Please try again.", Toast.LENGTH_SHORT).show()
+                    return
+                }
+
+                val orderDate = java.text.SimpleDateFormat("dd/MM/yyyy HH:mm", java.util.Locale.getDefault()).format(java.util.Date())
+                
+                // Convert cart items to map format for Firebase
+                val itemsList = cartItems.mapIndexed { index, item ->
+                    mapOf(
+                        "productId" to item.productId,
+                        "productName" to item.productName,
+                        "productPrice" to item.productPrice,
+                        "productImageResId" to item.productImageResId,
+                        "quantity" to item.quantity,
+                        "cartItemId" to item.cartItemId
+                    )
+                }
+                
+                // Create order data
+                val orderData = mapOf(
+                    "orderId" to orderId,
+                    "userId" to userId,
+                    "items" to itemsList,
+                    "totalAmount" to "₹${String.format("%.2f", cartTotalAmount)}",
+                    "orderDate" to orderDate,
+                    "status" to "Pending",
+                    "customerName" to customerName,
+                    "customerMobile" to customerMobile,
+                    "customerAddress" to customerAddress,
+                    "paymentMethod" to paymentMethod
+                )
+
+                // Save order to Firebase in both user-specific location and allOrders for admin
+                val userOrderPath = database.child("orders").child(userId).child(orderId)
+                val allOrdersPath = database.child("allOrders").child(orderId)
+                
+                // Save to user-specific location
+                userOrderPath.setValue(orderData)
+                    .addOnSuccessListener {
+                        // Also save to allOrders for admin access
+                        allOrdersPath.setValue(orderData)
+                            .addOnSuccessListener {
+                                // Clear cart after successful order
+                                cartRef.removeValue()
+                                android.util.Log.d("PaymentActivity", "Cart order saved successfully!")
+                                Toast.makeText(this@PaymentActivity, "Order placed! Payment initiated.", Toast.LENGTH_LONG).show()
+                            }
+                            .addOnFailureListener { e ->
+                                android.util.Log.e("PaymentActivity", "Error saving to allOrders: ${e.message}")
+                                // Still clear cart and show success since user order was saved
+                                cartRef.removeValue()
+                                Toast.makeText(this@PaymentActivity, "Order placed! Payment initiated.", Toast.LENGTH_LONG).show()
+                            }
+                    }
+                    .addOnFailureListener { e ->
+                        android.util.Log.e("PaymentActivity", "Error saving cart order: ${e.message}")
+                        Toast.makeText(this@PaymentActivity, "Error placing order: ${e.message}", Toast.LENGTH_LONG).show()
+                    }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                android.util.Log.e("PaymentActivity", "Error loading cart: ${error.message}")
+                Toast.makeText(this@PaymentActivity, "Error loading cart: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }
